@@ -25,9 +25,9 @@ jobs:
           channel: 'stable'
           cache: true
 
-      - name: Create Android directory if missing
+      - name: Recreate Android Project Files
         run: |
-          mkdir -p android
+          flutter create . --platforms=android --org=com.hisabpro.app
 
       - name: Install dependencies
         run: flutter pub get
@@ -35,6 +35,11 @@ jobs:
       - name: Build APK
         run: flutter build apk --debug
 
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-apk
+          path: build/app/outputs/flutter-apk/app-debug.apk
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
