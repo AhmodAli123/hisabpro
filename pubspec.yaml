@@ -10,7 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  flutter_local_notifications: ^17.0.0
   # State management. Lightweight and mature; keeps UI and business logic separate.
   provider: ^6.1.2
 
