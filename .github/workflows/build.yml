@@ -25,23 +25,46 @@ jobs:
           channel: 'stable'
           cache: true
 
-      - name: Recreate Android Project Files
+      - name: Generate Android Project Structure
         run: |
           flutter create . --platforms=android --org=com.hisabpro.app
+
+      - name: Apply Android Build Fixes
+        run: |
+          cat << 'EOF' > android/app/build.gradle
+          plugins {
+              id "com.android.application"
+              id "kotlin-android"
+              id "dev.flutter.flutter-gradle-plugin"
+          }
+
+          android {
+              namespace "com.hisabpro.app"
+              compileSdk 34
+
+              defaultConfig {
+                  applicationId "com.hisabpro.app"
+                  minSdk 21
+                  targetSdk 34
+                  versionCode 1
+                  versionName "1.0.0"
+              }
+
+              compileOptions {
+                  sourceCompatibility JavaVersion.VERSION_17
+                  targetCompatibility JavaVersion.VERSION_17
+              }
+          }
+          EOF
 
       - name: Install dependencies
         run: flutter pub get
 
       - name: Build APK
-        run: flutter build apk --debug
+        run: flutter build apk --debug --no-tree-shake-icons
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: release-apk
-          path: build/app/outputs/flutter-apk/app-debug.apk
-      - name: Upload APK Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: debug-apk
+          name: HisabPro-APK
           path: build/app/outputs/flutter-apk/app-debug.apk
